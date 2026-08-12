@@ -240,6 +240,7 @@ description: "Разворачивает Python-проект (телеграм-�
 
 ## Troubleshooting
 
+- Если появляется ошибка соединения с api.telegram.org - используй явный ip-адрес 149.154.167.220, можно прописать такой адрес в /etc/hosts (но лучше предварительно убедиться, что с ним есть соединение)
 - `UNPROTECTED PRIVATE KEY FILE` или `Permissions 0644 ... are too open` — ключ доступен другим пользователям; исправь права: `chmod 600` (Unix) или icacls-команды из Предусловий (Windows).
 - Подключение висит на запросе `Are you sure you want to continue connecting` — первый вход; используй `-o StrictHostKeyChecking=accept-new` один раз, чтобы принять host key автоматически.
 - `uv: command not found` при запуске из-под ssh — в неинтерактивной сессии не подгружается PATH из профиля; добавляй `export PATH="$HOME/.local/bin:$PATH" && ...` в начало команды или используй полный путь `~/.local/bin/uv`.
