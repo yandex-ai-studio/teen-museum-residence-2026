@@ -1,18 +1,63 @@
-# teen-museum-residence-2026
-Материалы совместной летней школы с ГМИИ им. Пушкина
+# Материалы совместной летней школы с ГМИИ им. Пушкина
+
+## Учимся работать с Yandex AI Studio
+
+Для демонстрации того, как работать с агентами в облаке, посмотрите файл [AI-Studio-Demo.ipynb](notebooks/AI-Studio-Demo.ipynb). Его можно открыть прямо в браузере в среде Google Colab.
+
+[![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/yandex-ai-studio/teen-museum-residence-2026/blob/main/notebooks/AI-Studio-Demo-Colab.ipynb)
+
+## Командная строка
+
+В ходе школы вам потребуется работать с **командной строкой**. Если вы используете Windows, то рекомендуется установить на компьютер [Windows Terminal](https://github.com/microsoft/terminal/) через [магазин приложений](https://aka.ms/terminal) или [скачав дистрибутив](https://github.com/microsoft/terminal/releases).
+
+## Vibecoding
+
+Для создания приложений мы будем использовать принципы **вайбкодинга**. Установите на компьютер один из следующих инструментов:
+
+* [SourceCraft CLI / Code Assistant](https://sourcecraft.dev/portal/code-assistant/) - используйте команду ниже для установки:
+```
+iex (New-Object System.Net.WebClient).DownloadString('https://s3.yandexcloud.net/sourcecraft-cli/install.ps1')
+```
+* [OpenCode Desktop](https://opencode.ai/download) или [OpenCode Terminal](https://opencode.ai/download)
+
+В рамках обоих ассистентов вам предлагается какое-то количество токенов бесплатно. Если этого недостаточно, то можно подключить OpenCode к моделям Yandex AI Studio - для этого замените файл `.config\opencode\config.json` в вашей домашней директории на [этот файл](etc/config.json), и установите переменные окружения `folder_id` и `api_key` на соответствующие значения.
+
+## Установка окружения Python
+
+Для работы вам также потребуется Python. Проще всего установить утилиту `uv`, которая позволит вам легко создавать нужное окружение с нужной версией Python по требованию. Установите `uv` в соответствии [c инструкцией](https://docs.astral.sh/uv/getting-started/installation/), в среде Windows можно выполнить следующую команду:
+```
+powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
+```
 
 ## Skills
 
+В рамках работы над проектами мы рекомендуем использовать следующие скиллы для кодинг-агентов, которые помогают им правильнее выполнять определённые задачи. Для установки этих скиллов скопируйте всё содержимое директории `skills` из репозитория в директорию `.config\opencode\skills`.
+
 ### sourcecraft-sites
 Создаёт и публикует простой статический сайт на SourceCraft Sites: создаёт публичный репозиторий через CLI `src`, наполняет его файлами `site/index.html` и `.sourcecraft/sites.yaml`, пушит в `main` и сообщает адрес `https://<org-slug>.sourcecraft.site/<repo-slug>`.
-
-Установка: скопируйте папку `skills/sourcecraft-sites` в `~/.config/opencode/skills/sourcecraft-sites/` (глобально) или в `.opencode/skills/sourcecraft-sites/` текущего проекта, затем перезапустите opencode.
 
 Пример запроса: «Создай сайт на SourceCraft Sites для организации myorg».
 
 ### mobile-web-app
 Генерирует файлы мобильного веб-приложения (PWA) из статического сайта: web manifest, service worker, meta-теги для iOS и Android, раскладку мобильного приложения с адаптацией под десктоп. Готовый сайт можно «Добавить на главный экран» на iPhone и Android. Скилл только создаёт файлы; публикацию делает sourcecraft-sites или GitHub Pages.
 
-Установка: скопируйте папку `skills/mobile-web-app` в `~/.config/opencode/skills/mobile-web-app/` (глобально) или в `.opencode/skills/mobile-web-app/` текущего проекта, затем перезапустите opencode.
-
 Пример запроса: «Сделай сайт мобильным приложением с нижней навигацией — Главная/Каталог/О себе — и опубликуй на SourceCraft Sites для организации myorg».
+
+### ai-studio
+Помогает писать чистые Python-приложения на Yandex AI Studio через OpenAI-совместимый Responses API и другие сервисы Yandex: выбор подходящей модели и контекстных лимитов, настройка клиента, текстовые и мультимодальные ответы, диалоги, стриминг, структурированный вывод через Pydantic, вызовы функций, веб-поиск, RAG и векторные хранилища, Code Interpreter, генерация изображений, Vision OCR и SpeechKit.
+
+Пример запроса: «Напиши Python-приложение, которое распознаёт текст с фотографии через Vision OCR в Yandex AI Studio».
+
+### telegram-bot
+Создаёт и запускает Telegram-бота на библиотеке pyTelegramBotAPI (telebot) в режиме поллинга: проект с `.env` для секретов, `requirements.txt`, локальное окружение через `uv` и локальный запуск. По отдельной просьбе — развёртывание бота на удалённом сервере по SSH.
+
+Пример запроса: «Сделай Telegram-бота, который по команде /dog присылает случайную картинку с собакой».
+
+### vm-deploy
+Разворачивает Python-проект (телеграм-бота, сайт или любое приложение на `uv`) на виртуальной машине Yandex Cloud по SSH: правка прав на SSH-ключ, установка `uv`, копирование проекта в `~/projects/`, создание окружения и скриптов запуска/остановки/статуса. Параметры машины (IP, пользователь, ключ) скилл читает из `vm.yml`.
+
+Пример запроса: «Разверни проект sample-apps/game на нашей виртуальной машине из vm.yml».
+
+## Виртуальные машины
+
+Для постоянного размещения кода телеграм-бота или динамического сайта в интернет для каждой команды создана своя виртуальная машина в облаке Yandex Cloud. 
